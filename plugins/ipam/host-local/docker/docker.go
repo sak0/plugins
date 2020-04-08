@@ -2,6 +2,7 @@ package docker
 
 import (
 	"context"
+	"fmt"
 	"github.com/docker/engine-api/client"
 )
 
@@ -19,6 +20,7 @@ func (dc *DockerClient)GetPodIP(containerId string)(string, error){
 		return "", err
 	}
 	podIP, ok := container.Config.Labels[LABLEPODIP]
+	fmt.Printf("%s\n", container)
 	if !ok {
 		return "", err
 	}
