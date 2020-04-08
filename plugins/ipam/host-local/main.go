@@ -46,11 +46,12 @@ func cmdAdd(args *skel.CmdArgs) error {
 		return err
 	}
 	podIP, err := dc.GetPodIP(args.ContainerID)
-	if err != nil || podIP == "" {
+	ip := net.ParseIP(podIP)
+	if err != nil || ip == nil {
 		fmt.Printf("get pod ip faild\n")
-		return err
+		panic(err)
 	} else {
-		fmt.Printf("podIP: %s", podIP)
+		fmt.Printf("podIP: %s", ip)
 	}
 
 	ipamConf, confVersion, err := allocator.LoadIPAMConfig(args.StdinData, args.Args)
@@ -100,6 +101,7 @@ func cmdAdd(args *skel.CmdArgs) error {
 		}
 
 		ipConf, err := allocator.Get(args.ContainerID, requestedIP)
+		ipConf.Address.IP = ip
 		if err != nil {
 			// Deallocate all already allocated IPs
 			for _, alloc := range allocs {
