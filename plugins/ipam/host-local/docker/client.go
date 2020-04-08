@@ -2,8 +2,6 @@ package docker
 
 import (
 	"context"
-	"strconv"
-
 	"github.com/docker/engine-api/client"
 )
 
