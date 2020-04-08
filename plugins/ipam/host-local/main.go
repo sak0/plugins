@@ -47,11 +47,6 @@ func cmdAdd(args *skel.CmdArgs) error {
 	}
 	podIP, err := dc.GetPodIP(args.ContainerID)
 	ip := net.ParseIP(podIP)
-	if err != nil || ip == nil {
-		fmt.Printf("get pod ip faild\n")
-	} else {
-		fmt.Printf("podIP: %s", ip)
-	}
 
 	ipamConf, confVersion, err := allocator.LoadIPAMConfig(args.StdinData, args.Args)
 	if err != nil {
