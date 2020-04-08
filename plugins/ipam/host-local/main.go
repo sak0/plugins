@@ -26,6 +26,8 @@ import (
 	"github.com/containernetworking/cni/pkg/types"
 	"github.com/containernetworking/cni/pkg/types/current"
 	"github.com/containernetworking/cni/pkg/version"
+
+	"github.com/sak0/plugins/plugins/ipam/host-local/docker"
 )
 
 func main() {
@@ -39,6 +41,18 @@ func cmdGet(args *skel.CmdArgs) error {
 }
 
 func cmdAdd(args *skel.CmdArgs) error {
+	dc, err := docker.NewDockerClient()
+	if err != nil {
+		return err
+	}
+	podIP, err := dc.GetPodIP(args.ContainerID)
+	if err != nil || podIP == "" {
+		fmt.Printf("get pod ip faild\n")
+		return err
+	} else {
+		fmt.Printf("podIP: %s", podIP)
+	}
+
 	ipamConf, confVersion, err := allocator.LoadIPAMConfig(args.StdinData, args.Args)
 	if err != nil {
 		return err
